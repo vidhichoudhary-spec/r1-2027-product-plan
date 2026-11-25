@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>R1 2027 Product Plan</title>
+  <style>
+    :root {
+      --ink: #1a2332;
+      --muted: #5a6a7a;
+      --line: #d8dee6;
+      --bg: #f7f5f1;
+      --card: #ffffff;
+      --accent: #0d5c63;
+      --accent-soft: #e6f2f3;
+      --warn: #8a5a00;
+      --warn-bg: #fff6e6;
+      --rank: #0d5c63;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, #dce9ea 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, #efe8dc 0%, transparent 50%),
+        var(--bg);
+      line-height: 1.55;
+      font-size: 16px;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+
+    header {
+      margin-bottom: 40px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 650;
+      margin: 0 0 12px;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 3vw, 2.15rem);
+      line-height: 1.2;
+      margin: 0 0 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .lede {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 62ch;
+      margin: 0 0 20px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .meta strong { color: var(--ink); font-weight: 600; }
+
+    nav.toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin: 28px 0 8px;
+    }
+
+    nav.toc a {
+      display: block;
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    nav.toc a:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(13, 92, 99, 0.08);
+    }
+
+    nav.toc a span {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    section {
+      margin-top: 44px;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin: 28px 0 8px;
+    }
+
+    .north-star {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      margin: 14px 0 20px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .north-star strong {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .callout {
+      background: var(--warn-bg);
+      border: 1px solid #f0d9a8;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 18px 0;
+      color: var(--warn);
+      font-size: 0.95rem;
+    }
+
+    .callout strong { color: var(--ink); }
+
+    p { margin: 0 0 14px; }
+
+    ul { margin: 0 0 16px; padding-left: 1.2em; }
+    li { margin-bottom: 6px; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 12px 0 20px;
+    }
+
+    .filters a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .filters a:hover { border-color: var(--accent); color: var(--accent); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 12px 0 8px;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef2f5;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    td.rank {
+      font-weight: 700;
+      color: var(--rank);
+      width: 52px;
+      text-align: center;
+    }
+
+    td.epic a {
+      color: var(--accent);
+      font-weight: 650;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    td.epic a:hover { text-decoration: underline; }
+
+    .track-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 20px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--card);
+    }
+
+    .track-list li {
+      margin: 0;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .track-list li:last-child { border-bottom: none; }
+
+    .track-list .n {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.9rem;
+      padding-top: 1px;
+    }
+
+    .track-list a {
+      color: var(--accent);
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .track-list a:hover { text-decoration: underline; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    @media (max-width: 700px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .page { padding: 28px 16px 60px; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .card h4 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 56px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="eyebrow">Accounting · R1 2027</p>
+      <h1>R1 2027 product plan</h1>
+      <p class="lede">
+        Ranked priorities for Vendors, Vendor Access, Vendor Marketplace, Invoices,
+        and Invoice Processing.
+      </p>
+      <div class="meta">
+        <div><strong>Date</strong> 23 Nov 2026</div>
+        <div><strong>Release</strong> R1 2027</div>
+      </div>
+
+      <nav class="toc" aria-label="Sections">
+        <a href="#how-we-run">How we run the backlog <span>Ranked filters = roadmap</span></a>
+        <a href="#vendors">Vendors <span>Security &amp; auditability</span></a>
+        <a href="#marketplace">Vendor Marketplace <span>Console APIs + VA rewrite</span></a>
+        <a href="#invoices">Invoices &amp; IPS <span>Console APIs + in-house IPS</span></a>
+      </nav>
+    </header>
+
+    <section id="how-we-run">
+      <h2>How the backlog works</h2>
+      <p>
+        Both the Vendors and Vendor Marketplace teams work from a <strong>single ranked backlog</strong>
+        via shared Jira filters. The filter <em>is</em> the roadmap — when an epic completes,
+        the team picks up the next item in rank order. There is no fixed scope ceiling.
+      </p>
+      <div class="filters">
+        <a href="https://entrata.atlassian.net/issues/?filter=42079" target="_blank" rel="noopener">Vendors · Filter 42079</a>
+        <a href="https://entrata.atlassian.net/issues/?filter=42078" target="_blank" rel="noopener">Marketplace · Filter 42078</a>
+      </div>
+      <p>
+        Rank order stays product-owned. If engineering wants a reorder for technical dependency
+        or capacity reasons, we align before changing rank — we don’t silently reshuffle.
+      </p>
+    </section>
+
+    <section id="vendors">
+      <h2>Vendors — close every entry point for vendor data changes</h2>
+      <div class="north-star">
+        <strong>North star</strong>
+        After R1, there is no way to change sensitive vendor data in Entrata without an auditable record.
+      </div>
+
+      <h3>Why this is R1</h3>
+      <p>
+        Vendor fraud is an active, escalating risk across property management. Threat actors change
+        EINs, bank accounts, and payment terms through channels that currently leave no trail —
+        CSV imports, NetVendor syncs, third-party integrations, and direct UI edits all bypass the
+        activity log. When a fraudulent payment goes out, customers have no audit trail to investigate.
+      </p>
+      <p>
+        R4 closed the remittance door (highest-dollar attack surface). R1 closes
+        <strong>every remaining entry point</strong>. The top 6 epics are sequenced by attack-surface
+        risk so the most exploitable gaps close first. This is an active security gap that customers
+        and InfoSec have flagged — not tech-debt cleanup.
+      </p>
+      <p>
+        This lane runs <strong>in parallel with Console</strong>. Both are R1 commitments; neither waits on the other.
+      </p>
+
+      <h3>Minimum business need (top 6)</h3>
+      <p>These close the highest-risk surfaces and must deliver in R1:</p>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Epic</th><th>Scope</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">1</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-279052" target="_blank" rel="noopener">DEV-279052</a></td>
+            <td>Vendor Accounts Field History (Core UI) — shared pattern; EIN, name, status, tax info</td>
+          </tr>
+          <tr>
+            <td class="rank">2</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-279064" target="_blank" rel="noopener">DEV-279064</a></td>
+            <td>Vendor Info Field History (Corporate and Terms) — payment terms, corporate changes</td>
+          </tr>
+          <tr>
+            <td class="rank">3</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-279057" target="_blank" rel="noopener">DEV-279057</a></td>
+            <td>Vendor Master CSV Import Attribution — bulk imports with no per-record trail</td>
+          </tr>
+          <tr>
+            <td class="rank">4</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-279061" target="_blank" rel="noopener">DEV-279061</a></td>
+            <td>NetVendor Field Attribution — third-party API changes</td>
+          </tr>
+          <tr>
+            <td class="rank">5</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-279062" target="_blank" rel="noopener">DEV-279062</a></td>
+            <td>Additional Third-Party Integration Attribution</td>
+          </tr>
+          <tr>
+            <td class="rank">6</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-279066" target="_blank" rel="noopener">DEV-279066</a></td>
+            <td>Vendor Contacts Field History — contact info impersonation vector</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Work continues past these six via <a href="https://entrata.atlassian.net/issues/?filter=42079" target="_blank" rel="noopener">Filter 42079</a>.</p>
+
+      <div class="callout">
+        <strong>BACS (<a href="https://entrata.atlassian.net/browse/DEV-355599" target="_blank" rel="noopener">DEV-355599</a>)</strong>
+        should ship in R4. If it doesn’t, it stays at the top of the Vendor rank — above these six.
+      </div>
+    </section>
+
+    <section id="marketplace">
+      <h2>Vendor Marketplace — Console APIs + VA rewrite</h2>
+      <div class="north-star">
+        <strong>North star</strong>
+        Make vendor and compliance data discoverable in Entrata Pro Console, and modernize every
+        VendorAccess screen to the current design standard.
+      </div>
+
+      <h3>Why Console APIs</h3>
+      <p>
+        Entrata Pro Console is the next-generation AI assistant platform — how property managers
+        and accounting teams will interact with Entrata data conversationally. Console uses MCP
+        tools to read and act on data across the platform. Accounting teams are building read APIs
+        for their domains so Console can answer questions like
+        <em>“which vendors have expired insurance at Oakwood?”</em> or
+        <em>“show me open POs for ABC Plumbing.”</em>
+      </p>
+      <p>
+        Our <strong>Vendor Directory</strong> and <strong>Vendor Compliance</strong> APIs are among
+        the first vendor-data tools Console needs. Scope is <strong>read-only Core APIs</strong>
+        exposing existing vendor data through a shared <code>accounting-mcp</code> server — no new UI,
+        no business-logic changes. Chris Kunz’s approval-routing program
+        (<a href="https://entrata.atlassian.net/browse/DEV-358986" target="_blank" rel="noopener">DEV-358986</a>)
+        depends on the same infrastructure and is already in flight. Multiple accounting teams
+        (Corporate Accounting, Budgeting, Customer Transactions, Revenue Protection, General Accounting)
+        are building parallel Console epics for R1 — this is org-wide.
+      </p>
+
+      <div class="callout">
+        <strong>Marketplace product work is paused</strong> (vendor enrollment, catalog) —
+        GTM has not contracted any vendors. Direction may change after these two lanes complete;
+        we are not planning beyond them for now.
+      </div>
+
+      <h3>Rank order</h3>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Epic</th><th>Scope</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">1</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-143957" target="_blank" rel="noopener">DEV-143957</a></td>
+            <td>VendorAccess Invoice Screen Rewrite — In Dev; finish first (current screen timing out)</td>
+          </tr>
+          <tr>
+            <td class="rank">2</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-361833" target="_blank" rel="noopener">DEV-361833</a></td>
+            <td>Console API: Vendor Directory</td>
+          </tr>
+          <tr>
+            <td class="rank">3</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-361834" target="_blank" rel="noopener">DEV-361834</a></td>
+            <td>Console API: Vendor Compliance</td>
+          </tr>
+          <tr>
+            <td class="rank">4</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-357468" target="_blank" rel="noopener">DEV-357468</a></td>
+            <td>VA Home Page — Technical Release Enablement (blocking Home Page deploy)</td>
+          </tr>
+          <tr>
+            <td class="rank">5</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-283798" target="_blank" rel="noopener">DEV-283798</a></td>
+            <td>Prevent Duplicate Property Account Assignments</td>
+          </tr>
+          <tr>
+            <td class="rank">6</td>
+            <td class="epic"><a href="https://entrata.atlassian.net/browse/DEV-311943" target="_blank" rel="noopener">DEV-311943</a></td>
+            <td>VA Master List Advanced Filters Refinement</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        VA rewrite screens (Company Profile, Compliance) continue after rank 6 via
+        <a href="https://entrata.atlassian.net/issues/?filter=42078" target="_blank" rel="noopener">Filter 42078</a>.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4>Jira status</h4>
+          <p>Console API epics (DEV-361833, DEV-361834) created with BRD R1 2027; TRD spikes created.</p>
+        </div>
+        <div class="card">
+          <h4>BRD dates</h4>
+          <p>No BRD dates were changed. BRD reflects when the business asked for the work — independent of delivery timing.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="invoices">
+      <h2>Invoices &amp; Invoice Processing</h2>
+      <p>
+        Invoice Processing stays focused on in-house IPS; the Invoices team leads Console APIs
+        with SAPT readiness baked into the design.
+      </p>
+
+      <h3>Invoice Processing — in-house development</h3>
+      <div class="north-star">
+        <strong>North star</strong>
+        Eliminate dependency on third-party invoice processing by bringing the full IPS workflow in-house.
+      </div>
+      <p>
+        Every invoice that routes through a third-party processor adds cost, latency, and a failure
+        point Entrata doesn’t control. High-volume clients feel this as delays, late payments, and
+        AP teams chasing status. In-house IPS gives end-to-end control over throughput, accuracy,
+        and cost per invoice. This remains the top priority for the Invoice Processing team —
+        no change in direction from 2026.
+      </p>
+
+      <h3>Invoices — Console APIs + SAPT readiness</h3>
+      <div class="north-star">
+        <strong>North star</strong>
+        Make invoice and PO data discoverable in Entrata Pro Console, and ensure the PO data model
+        is SAPT-ready so nothing breaks when that transition lands.
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4>Why Console APIs</h4>
+          <p>
+            Same org-wide Console / MCP push as Vendors. Enables conversational questions like
+            open POs and invoices pending approval — shared infrastructure with approval routing
+            (DEV-358986).
+          </p>
+        </div>
+        <div class="card">
+          <h4>Why SAPT readiness</h4>
+          <p>
+            SAPT will restructure PO/invoice storage. Per-line type fields (standard / catalog / job cost)
+            in read responses from day one keep R1 APIs from breaking when SAPT lands.
+          </p>
+        </div>
+      </div>
+
+      <h3>Track 1 — Console APIs (product priority order)</h3>
+      <ol class="track-list">
+        <li>
+          <span class="n">1</span>
+          <span><a href="https://entrata.atlassian.net/browse/DEV-361830" target="_blank" rel="noopener">DEV-361830</a> — Invoice Discovery: Search, Read and PO Match</span>
+        </li>
+        <li>
+          <span class="n">2</span>
+          <span><a href="https://entrata.atlassian.net/browse/DEV-361831" target="_blank" rel="noopener">DEV-361831</a> — Purchase Order Discovery: Search, Read and Receiving Status</span>
+        </li>
+        <li>
+          <span class="n">3</span>
+          <span><a href="https://entrata.atlassian.net/browse/DEV-358986" target="_blank" rel="noopener">DEV-358986</a> — Approval Tools: Shared Contract + Invoices and POs (in flight)</span>
+        </li>
+        <li>
+          <span class="n">4</span>
+          <span><a href="https://entrata.atlassian.net/browse/DEV-358985" target="_blank" rel="noopener">DEV-358985</a> — Admin Note on an Approval Rule (Classic prerequisite for 358986)</span>
+        </li>
+        <li>
+          <span class="n">5</span>
+          <span><a href="https://entrata.atlassian.net/browse/DEV-361832" target="_blank" rel="noopener">DEV-361832</a> — AP Spend and Commitments <em>(R2 candidate if capacity is tight)</em></span>
+        </li>
+      </ol>
+
+      <h3>Track 2 — SAPT</h3>
+      <p>
+        Not a separate epic — a design constraint on the Console API work: PO read APIs include
+        per-line type fields so the response shape survives SAPT.
+      </p>
+      <p>
+        Formal Invoices backlog ranking in Jira is still forthcoming (similar to the Vendor /
+        Marketplace filters). The track order above is the current product priority.
+      </p>
+    </section>
+
+    <footer>
+      R1 2027 Accounting product plan · 23 November 2026
+    </footer>
+  </div>
+</body>
+</html>
